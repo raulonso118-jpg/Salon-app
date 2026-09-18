@@ -7,7 +7,7 @@ import io
 import numpy as np
 from PIL import Image, ImageFilter
 
-# --- MOTOR NBO-A / PERCEPTRÓN 211 ---
+# --- TU MOTOR DE IA (NBO-a / PERCEPTRÓN 211) ---
 def relu_mod_211(S):
     if S <= 0:
         return 0.0
@@ -79,12 +79,11 @@ class HandlerProcesador(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
         else:
-            # Permite servir los archivos estáticos de la carpeta assets (como index.html)
-            super().do_GET()
+            self.send_error(404)
 
 PORT = 8080
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-print(f"--- Servidor NBO-A Génesis B en Puerto {PORT} http://localhost:8080/assets/index.html ---")
+print(f"--- Servidor en Puerto {PORT}  http://localhost:8080/index.html ---")
 with socketserver.TCPServer(("", PORT), HandlerProcesador) as httpd:
     httpd.serve_forever()
