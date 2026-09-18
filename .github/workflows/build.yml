@@ -3,18 +3,32 @@ on:
   push:
     branches: [ principal ]
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      # 🚀 PASO CRÍTICO: Liberar espacio en disco para evitar que se caiga a los 5 minutos
+      # Esto elimina entornos de software que GitHub preinstala y que tú no vas a usar
+      - name: Liberar espacio en el Runner
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf /usr/local/lib/android # Borra SDKs viejos para que Buildozer instale el limpio
+          df -h # Muestra en el log cuánto espacio quedó libre
+
       - name: Compilar con Buildozer Action
         uses: ArtemSBulgakov/buildozer-action@v1
         id: buildozer
         with:
-          workdir:.
+          workdir: .  # <-- Corregido el espacio aquí
           command: buildozer android debug
           buildozer_version: stable
+
       - name: Subir APK
         uses: actions/upload-artifact@v4
         with:
