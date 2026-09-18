@@ -1,51 +1,22 @@
-name: Compilar APK Android Definitivo
-
+name: Compilador APK Android Definitivo
 on:
   push:
-    branches: [ main, master ]
-
+    branches: [ principal ]
+  workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-22.04
     steps:
-    - name: Copiar repositorio
-      uses: actions/checkout@v4
-
-    - name: Liberar espacio en disco pesado
-      run: |
-        sudo rm -rf /usr/share/dotnet
-        sudo rm -rf /opt/ghc
-        sudo rm -rf "/usr/local/share/boost"
-        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-        sudo apt-get clean
-        df -h
-
-    - name: Configurar entorno Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-
-    - name: Instalar dependencias del sistema para Buildozer
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-            git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config \
-            zlib1g-dev libncurses5-dev ncurses-dev libsdl2-dev libsdl2-image-dev \
-            libsdl2-mixer-dev libsdl2-ttf-dev libffi-dev libssl-dev
-
-    - name: Instalar Buildozer y Cython
-      run: |
-        pip install --upgrade pip
-        pip install --user Cython==0.29.36 buildozer
-
-    - name: Compilar APK con Buildozer
-      run: |
-        export PATH=$PATH:~/.local/bin
-        yes | buildozer -v android debug
-
-    - name: Guardar y subir el archivo APK generado
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-salon-debug
-        path: bin/*.apk
+      - uses: actions/checkout@v4
+      - name: Compilar con Buildozer Action
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          workdir:.
+          command: buildozer android debug
+          buildozer_version: stable
+      - name: Subir APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: salon-apk
+          path: bin/*.apk
