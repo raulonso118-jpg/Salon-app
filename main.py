@@ -1,7 +1,7 @@
 import os
 import pygame
 
-# 1. Inicializamos Pygame obligatoriamente antes de crear cualquier ventana o motor gráfico
+# Inicializamos los subsistemas de Pygame de manera segura
 pygame.init()
 
 from flask import Flask, render_template, request, jsonify
@@ -17,7 +17,6 @@ def procesar_rostro():
     try:
         data = request.json
         imagen_data = data.get('imagen')
-        # Lógica del motor NBO-A Génesis B
         return jsonify({
             'estatus': 'ok',
             'imagen_procesada': imagen_data 
@@ -26,10 +25,5 @@ def procesar_rostro():
         return jsonify({'estatus': 'error', 'mensaje': str(e)}), 500
 
 if __name__ == '__main__':
-    # Inicialización de prueba del motor gráfico si se requiere en local
-    try:
-        print("Iniciando pruebas de entorno y Flask...")
-    except Exception as e:
-        print(f"Aviso del motor: {e}")
-        
+    print("Iniciando servidor Flask local...")
     app.run(host='0.0.0.0', port=8080)
