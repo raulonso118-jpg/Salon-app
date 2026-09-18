@@ -1,26 +1,47 @@
 [app]
-title = Salon Studio Pro
-package.name = salonstudio
-package.domain = com.salon.studio
-source.dir = .
-version = 1.0
 
-# ⚙️ REQUISITOS: Agregué las extensiones indispensables para que tu HTML y CSS entren al APK
+# (str) Title of your application
+title = Salon Studio Pro
+
+# (str) Package name
+package.name = salonstudio
+
+# (str) Package domain (needed for android packaging)
+package.domain = com.salon.studio
+
+# (str) Source code where the main.py lives (Corregido con espacio obligatorio)
+source.dir = .
+
+# (list) Source files to include (Asegura que tu HTML se guarde dentro del APK)
 source.include_exts = py,png,jpg,kv,atlas,html,css
 
-# 📦 DEPENDENCIAS: Asegúrate de agregar aquí cualquier otra librería que use tu main.py (ej: flask, requests, etc.)
-requirements = python3,kivy,android
+# (str) Application version
+version = 1.0
 
+# (list) Application requirements
+# 🚀 CRÍTICO: Agregados numpy y pillow para tu procesador de imágenes por matrices
+requirements = python3, kivy, numpy, pillow, android
+
+# (str) Supported orientations (landscape, portrait or all)
 orientation = portrait
 
-# 📸 PERMISOS: Vitales para que la cámara del cliente y el lienzo de simulación funcionen en Android
+# (list) Permissions
+# 📸 CRÍTICO: Permisos necesarios para usar la cámara y simular el rostro en el celular
 android.permissions = CAMERA, INTERNET, RECORD_AUDIO
 
+# (int) Target Android API, should be as high as possible.
+android.api = 33
+
+# (int) Minimum API your APK will support.
+android.minapi = 21
+
+# (bool) Accept SDK license agreement if needed
+android.accept_sdk_license_agreement = True
+
 [buildozer]
+
+# (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
 log_level = 2
 
-[app:android]
-android.api = 33
-android.minapi = 21
-# Eliminé la línea fija del NDK para que Buildozer descargue automáticamente la versión exacta compatible con la API 33 de forma limpia
-android.accept_sdk_license_agreement = True
+# (int) Display warning if buildozer is run as root (0 = false, 1 = true)
+warn_on_root = 1
