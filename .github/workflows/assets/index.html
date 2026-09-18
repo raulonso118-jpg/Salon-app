@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salón Studio Pro</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --primary: #0284c7;
+            --success: #059669;
+        }
+        body.theme-claro {
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .pantalla { display: none; }
+        .pantalla.activa { display: block; }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .tabs-cat { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 10px; }
+        .tab-btn { background: var(--border); padding: 6px 12px; font-size: 0.85rem; width: auto; }
+        .tab-btn.activo { background: var(--primary); }
+        .carrusel { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+        .item-cat { min-width: 80px; text-align: center; cursor: pointer; border: 1px solid var(--border); border-radius: 8px; padding: 5px; background: var(--bg); }
+        .item-cat img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
+        .item-servicio { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .nota-ticket { background: #fff; color: #000; padding: 15px; border-radius: 8px; margin-top: 10px; display: none; }
+        canvas { width: 100%; max-width: 100%; height: auto; border-radius: 8px; background: #000; display: block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA 1: CONFIGURACIÓN Y REFERENCIAS -->
+    <div id="pantalla-config" class="pantalla activa">
+        <div class="card">
+            <h2>⚙️ Configuración y Catálogo</h2>
+            <label>Tema de la interfaz:</label>
+            <select id="sel-tema">
+                <option value="oscuro">Oscuro (Default)</option>
+                <option value="claro">Claro</option>
+            </select>
+            <button id="btn-ir-trabajo" style="background:#059669">Ir al Área de Trabajo ➔</button>
+        </div>
+
+        <div class="card">
+            <h2>📸 Capturar Estilo de Referencia</h2>
+            <video id="video-ref" autoplay playsinline style="width:100%;border-radius:8px;max-height:200px;object-fit:cover;background:#000;"></video>
+            <div style="display:flex;gap:6px;margin-top:8px">
+                <button id="btn-foto-ref" style="background:#0284c7">Tomar Foto Referencia</button>
+                <input type="file" id="file-ref" accept="image/*" style="display:none">
+                <button onclick="document.getElementById('file-ref').click()" style="background:#64748b">Subir Imagen</button>
+            </div>
+            
+            <label style="margin-top:10px;display:block">Nombre del Servicio / Estilo:</label>
+            <input type="text" id="cat-nombre" placeholder="Ej: Corte Degradado / Tinte Rubio">
+            
+            <label>Tipo:</label>
+            <select id="cat-tipo">
+                <option value="cortes">Cortes</option>
+                <option value="tintes">Tintes</option>
+                <option value="maquillaje">Maquillaje</option>
+                <option value="peinados">Peinados</option>
+            </select>
+
+            <label>Precio ($):</label>
+            <input type="number" id="cat-precio" placeholder="0.00">
+
+            <label>Color Base (si no hay foto):</label>
+            <input type="color" id="cat-color" value="#8b5cf6">
+
+            <button id="btn-guardar-cat" style="background:#059669;margin-top:10px">💾 Guardar en el Catálogo</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 2: ÁREA DE TRABAJO Y SIMULACIÓN -->
+    <div id="pantalla-trabajo" class="pantalla">
+        <button id="btn-volver-config" style="background:#64748b;margin-bottom:10px">⬅ Volver a Configuración</button>
+        
+        <div class="card">
+            <h2>👤 Cliente & Simulación</h2>
+            <select id="sel-camara-cliente"></select>
+            <div style="display:flex;gap:6px">
+                <button id="btn-cam-cliente">📷 Activar Cámara</button>
+                <input type="file" id="foto-cliente" accept="image/*" style="display:none">
+                <button onclick="document.getElementById('foto-cliente').click()" style="background:#64748b">Subir Foto</button>
+            </div>
+            
+            <div id="wrap-cam-cliente" style="display:none;margin-top:10px">
+                <video id="video-cliente" autoplay playsinline style="width:100%;border-radius:8px;background:#000;"></video>
+            </div>
+
+            <canvas id="canvas-cliente"></canvas>
+
+            <div style="margin-top:10px">
+                <label>Posición X:</label>
+                <input type="range" id="ctrl-x" min="-300" max="300" value="0">
+                <label>Posición Y:</label>
+                <input type="range" id="ctrl-y" min="-300" max="300" value="0">
+                <label>Escala (%):</label>
+                <input type="range" id="ctrl-escala" min="10" max="300" value="100">
+                <label>Opacidad (%):</label>
+                <input type="range" id="ctrl-opacidad" min="0" max="100" value="70">
+                
+                <label>Suavizado / Piel Perfecta:</label>
+                <input type="range" id="ctrl-suavizado" min="0" max="100" value="0">
+                <label>Brillo:</label>
+                <input type="range" id="ctrl-brillo" min="50" max="150" value="100">
+                <label>Contraste:</label>
+                <input type="range" id="ctrl-contraste" min="50" max="150" value="100">
+                <label>Tono Rojo:</label>
+                <input type="range" id="ctrl-r" min="50" max="150" value="100">
+                <label>Tono Azul:</label>
+                <input type="range" id="ctrl-b" min="50" max="150" value="100">
+            </div>
+
+            <button id="btn-procesar-motor" style="background:#8b5cf6; margin-top:8px;">⚡ Procesar Matriz con el Motor</button>
+
+            <div style="display:flex;gap:6px;margin-top:8px">
+                <button id="btn-limpiar-capas" style="background:#64748b">Quitar Efecto</button>
+                <button id="btn-exportar-foto" style="background:#059669">💾 Exportar Foto</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💈 Catálogo de Estilos</h2>
+            <div class="tabs-cat">
+                <button class="tab-btn activo" onclick="filtrarCat('todos', this)">Todos</button>
+                <button class="tab-btn" onclick="filtrarCat('cortes', this)">Cortes</button>
+                <button class="tab-btn" onclick="filtrarCat('tintes', this)">Tintes</button>
+                <button class="tab-btn" onclick="filtrarCat('maquillaje', this)">Maquillaje</button>
+                <button class="tab-btn" onclick="filtrarCat('peinados', this)">Peinados</button>
+            </div>
+
+            <div class="carrusel" id="carrusel-trabajo"></div>
+            <select id="combo-catalogo" style="display:none"></select>
+            <button id="btn-sumar" style="background:var(--success);margin-top:8px">+ Añadir al Presupuesto</button>
+        </div>
+
+        <div class="card">
+            <h2>📋 Cotización Cliente</h2>
+            <div id="lista-presupuesto"><p style="color:var(--text-muted)">Sin servicios seleccionados</p></div>
+            <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:1rem;margin-top:10px">
+                <span>Total:</span><span id="total-suma">$0.00</span>
+            </div>
+            <button id="btn-ticket" style="margin-top:8px">Generar Nota</button>
+            <div class="nota-ticket" id="fina-nota">
+                <h3 style="text-align:center">TICKET DE SERVICIOS</h3>
+                <div id="nota-desglose"></div>
+                <hr style="border-top:1px dashed #000;margin:8px 0">
+                <div style="display:flex;justify-content:space-between;font-weight:bold">
+                    <span>TOTAL:</span><span id="nota-total"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    let catalogo = JSON.parse(localStorage.getItem('salon_cat') || '[]');
+    let serviciosSeleccionados = [];
+    let totalGeneral = 0;
+    
+    let imgCliente = null;
+    let refExtraidaData = null;
+    let estiloAplicado = null;
+    let imgOverlayObj = null;
+    let streamClienteCam = null;
+
+    const canvas = document.getElementById('canvas-cliente');
+    const ctx = canvas.getContext('2d');
+
+    const ctrlX = document.getElementById('ctrl-x');
+    const ctrlY = document.getElementById('ctrl-y');
+    const ctrlEscala = document.getElementById('ctrl-escala');
+    const ctrlOpacidad = document.getElementById('ctrl-opacidad');
+
+    [ctrlX, ctrlY, ctrlEscala, ctrlOpacidad, document.getElementById('ctrl-suavizado')].forEach(elem => {
+        if(elem) elem.addEventListener('input', redibujarCanvas);
+    });
+
+    document.getElementById('sel-tema').onchange = (e) => {
+        document.body.className = e.target.value !== 'oscuro' ? 'theme-' + e.target.value : '';
+    };
+
+    function cambiarPantalla(id) {
+        document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+        document.getElementById(id).classList.add('activa');
+        renderCatTrabajo('todos');
+        obtenerCamarasConectadas();
+    }
+
+    document.getElementById('btn-ir-trabajo').onclick = () => cambiarPantalla('pantalla-trabajo');
+    document.getElementById('btn-volver-config').onclick = () => cambiarPantalla('pantalla-config');
+
+    async function initCamRef() {
+        try {
+            const v = document.getElementById('video-ref');
+            const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            v.srcObject = s;
+        } catch(e) {}
+    }
+    initCamRef();
+
+    document.getElementById('btn-foto-ref').onclick = () => {
+        const v = document.getElementById('video-ref');
+        const c = document.createElement('canvas');
+        c.width = v.videoWidth || 300; c.height = v.videoHeight || 300;
+        c.getContext('2d').drawImage(v, 0, 0);
+        refExtraidaData = c.toDataURL('image/png');
+        alert("Referencia capturada. Ingresa nombre y precio para guardar.");
+    };
+
+    document.getElementById('file-ref').onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            refExtraidaData = ev.target.result;
+            alert("Imagen cargada como referencia.");
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const selCamara = document.getElementById('sel-camara-cliente');
+    
+    async function obtenerCamarasConectadas() {
+        try {
+            const tempStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            tempStream.getTracks().forEach(track => track.stop());
+            const dispositivos = await navigator.mediaDevices.enumerateDevices();
+            const camaras = dispositivos.filter(d => d.kind === 'videoinput');
+            selCamara.innerHTML = '';
+            if (camaras.length === 0) {
+                selCamara.innerHTML = '<option value="">No se encontraron cámaras</option>';
+                return;
+            }
+            camaras.forEach((cam, index) => {
+                const opt = document.createElement('option');
+                opt.value = cam.deviceId;
+                opt.textContent = cam.label || `Cámara ${index + 1}`;
+                selCamara.appendChild(opt);
+            });
+        } catch (e) {
+            selCamara.innerHTML = '<option value="">Error al acceder a cámaras</option>';
+        }
+    }
+
+    const btnCamCliente = document.getElementById('btn-cam-cliente');
+    const wrapCamCliente = document.getElementById('wrap-cam-cliente');
+    const videoCliente = document.getElementById('video-cliente');
+
+    async function iniciarStreamCamara(deviceId) {
+        if (streamClienteCam) {
+            streamClienteCam.getTracks().forEach(t => t.stop());
+        }
+        const constraints = {
+            video: deviceId ? { deviceId: { exact: deviceId } } : { facingMode: 'environment' }
+        };
+        streamClienteCam = await navigator.mediaDevices.getUserMedia(constraints);
+        videoCliente.srcObject = streamClienteCam;
+    }
+
+    selCamara.onchange = () => {
+        if (wrapCamCliente.style.display !== 'none') {
+            iniciarStreamCamara(selCamara.value);
+        }
+    };
+
+    btnCamCliente.onclick = async () => {
+        if (wrapCamCliente.style.display === 'none') {
+            try {
+                await iniciarStreamCamara(selCamara.value);
+                wrapCamCliente.style.display = 'block';
+                btnCamCliente.textContent = '📸 Capturar Foto Ahora';
+                btnCamCliente.style.background = '#059669';
+            } catch (err) {
+                alert('No se pudo acceder a la cámara seleccionada.');
+            }
+        } else {
+            const c = document.createElement('canvas');
+            c.width = videoCliente.videoWidth || 640;
+            c.height = videoCliente.videoHeight || 480;
+            c.getContext('2d').drawImage(videoCliente, 0, 0);
+            
+            const dataUrl = c.toDataURL('image/png');
+            
+            if (streamClienteCam) {
+                streamClienteCam.getTracks().forEach(track => track.stop());
+                streamClienteCam = null;
+            }
+            wrapCamCliente.style.display = 'none';
+            btnCamCliente.textContent = '📷 Activar Cámara';
+            btnCamCliente.style.background = '#0284c7';
+
+            imgCliente = new Image();
+            imgCliente.onload = async () => {
+                try { await imgCliente.decode(); } catch(e){}
+                redibujarCanvas();
+            };
+            imgCliente.src = dataUrl;
+        }
+    };
+
+    document.getElementById('btn-guardar-cat').onclick = () => {
+        const nombre = document.getElementById('cat-nombre').value;
+        const tipo = document.getElementById('cat-tipo').value;
+        const precio = parseFloat(document.getElementById('cat-precio').value);
+        const color = document.getElementById('cat-color').value;
+
+        if (!nombre || isNaN(precio)) return alert('Ingresa nombre y precio válidos');
+
+        catalogo.push({ id: Date.now(), nombre, tipo, precio, color, fotoData: refExtraidaData });
+        localStorage.setItem('salon_cat', JSON.stringify(catalogo));
+
+        document.getElementById('cat-nombre').value = '';
+        document.getElementById('cat-precio').value = '';
+        refExtraidaData = null;
+        alert('Servicio guardado exitosamente.');
+        renderCatTrabajo('todos');
+    };
+
+    document.getElementById('foto-cliente').onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const r = new FileReader();
+        r.onload = ev => {
+            imgCliente = new Image();
+            imgCliente.onload = async () => {
+                try { await imgCliente.decode(); } catch(e) {}
+                redibujarCanvas();
+            };
+            imgCliente.src = ev.target.result;
+        };
+        r.readAsDataURL(file);
+    };
+
+    function aplicarEstilo(item) {
+        estiloAplicado = item;
+        document.getElementById('combo-catalogo').value = item.id;
+        
+        if (item.fotoData) {
+            imgOverlayObj = new Image();
+            imgOverlayObj.onload = async () => {
+                try { await imgOverlayObj.decode(); } catch(e){}
+                redibujarCanvas();
+            };
+            imgOverlayObj.src = item.fotoData;
+        } else {
+            imgOverlayObj = null;
+            redibujarCanvas();
+        }
+    }
+
+    function redibujarCanvas() {
+        if (!imgCliente || !imgCliente.complete || imgCliente.naturalWidth === 0) return;
+        
+        canvas.width = imgCliente.naturalWidth;
+        canvas.height = imgCliente.naturalHeight;
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.save();
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.globalAlpha = 1.0;
+        ctx.drawImage(imgCliente, 0, 0);
+        ctx.restore();
+
+        if (!estiloAplicado) return;
+
+        const posX = parseFloat(ctrlX.value);
+        const posY = parseFloat(ctrlY.value);
+        const escala = parseFloat(ctrlEscala.value) / 100;
+        const opacidad = parseFloat(ctrlOpacidad.value) / 100;
+
+        ctx.save();
+        ctx.globalAlpha = opacidad;
+
+        if (imgOverlayObj && imgOverlayObj.complete && imgOverlayObj.naturalWidth > 0) {
+            const anchoBase = canvas.width * escala;
+            const altoBase = canvas.height * escala;
+            const offsetX = (canvas.width - anchoBase) / 2 + posX;
+            const offsetY = (canvas.height - altoBase) / 2 + posY;
+
+            ctx.drawImage(imgOverlayObj, offsetX, offsetY, anchoBase, altoBase);
+        } else if (estiloAplicado.color) {
+            ctx.fillStyle = estiloAplicado.color;
+            ctx.globalCompositeOperation = 'color-burn';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        ctx.restore();
+    }
+
+    document.getElementById('btn-procesar-motor').onclick = async () => {
+        if (!imgCliente) return alert('Primero carga o captura la foto del cliente');
+
+        const cTemp = document.createElement('canvas');
+        const maxDim = 800;
+        let w = canvas.width;
+        let h = canvas.height;
+        if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+        }
+        cTemp.width = w;
+        cTemp.height = h;
+        cTemp.getContext('2d').drawImage(canvas, 0, 0, w, h);
+
+        const payload = {
+            imagen: cTemp.toDataURL('image/jpeg', 0.8),
+            brillo: document.getElementById('ctrl-brillo').value,
+            contraste: document.getElementById('ctrl-contraste').value,
+            tono_r: document.getElementById('ctrl-r').value,
+            tono_g: 100,
+            tono_b: document.getElementById('ctrl-b').value,
+            suavizado: document.getElementById('ctrl-suavizado').value
+        };
+
+        try {
+            const res = await fetch('http://localhost:8080/api/procesar_rostro', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            if (data.estatus === 'ok') {
+                const imgEditada = new Image();
+                imgEditada.onload = () => {
+                    imgCliente = imgEditada;
+                    redibujarCanvas();
+                    alert('¡Matriz procesada con éxito por el motor!');
+                };
+                imgEditada.src = data.imagen_procesada;
+            } else {
+                alert('El motor respondió con un error.');
+            }
+        } catch (e) {
+            alert('No se pudo conectar con el motor. Asegúrate de ejecutar el servidor Python en Pydroid 3.');
+        }
+    };
+
+    function filtrarCat(tipo, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activo'));
+        if(btn) btn.classList.add('activo');
+        renderCatTrabajo(tipo);
+    }
+
+    function renderCatTrabajo(filtro) {
+        const trab = document.getElementById('carrusel-trabajo');
+        const combo = document.getElementById('combo-catalogo');
+        trab.innerHTML = ''; combo.innerHTML = '';
+
+        const filtrados = filtro === 'todos' ? catalogo : catalogo.filter(x => x.tipo === filtro);
+
+        filtrados.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'item-cat';
+            div.onclick = () => aplicarEstilo(item);
+            div.innerHTML = `${item.fotoData ? `<img src="${item.fotoData}">` : `<div style="width:60px;height:60px;background:${item.color};border-radius:8px;margin:0 auto"></div>`}<b>${item.nombre}</b><small>$${item.precio}</small>`;
+            trab.appendChild(div);
+
+            const opt = document.createElement('option');
+            opt.value = item.id;
+            opt.textContent = item.nombre;
+            combo.appendChild(opt);
+        });
+    }
+
+    document.getElementById('btn-exportar-foto').onclick = () => {
+        if (!imgCliente) return alert('Primero carga la foto del cliente');
+        const link = document.createElement('a');
+        link.download = `cliente_estilo_${Date.now()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    };
+
+    document.getElementById('btn-limpiar-capas').onclick = () => {
+        estiloAplicado = null;
+        imgOverlayObj = null;
+        ctrlX.value = 0;
+        ctrlY.value = 0;
+        ctrlEscala.value = 100;
+        ctrlOpacidad.value = 70;
+        redibujarCanvas();
+    };
+
+    document.getElementById('btn-sumar').onclick = () => {
+        const id = document.getElementById('combo-catalogo').value;
+        const item = catalogo.find(x => x.id == id);
+        if (!item) return alert('Selecciona un estilo primero');
+        serviciosSeleccionados.push(item);
+        totalGeneral += item.precio;
+        actualizarPresupuesto();
+    };
+
+    function actualizarPresupuesto() {
+        const cont = document.getElementById('lista-presupuesto');
+        cont.innerHTML = '';
+        serviciosSeleccionados.forEach((s) => {
+            const d = document.createElement('div');
+            d.className = 'item-servicio';
+            d.innerHTML = `<span>${s.nombre} (${s.tipo})</span><b>$${s.precio}</b>`;
+            cont.appendChild(d);
+        });
+        document.getElementById('total-suma').innerText = `$${totalGeneral.toFixed(2)} MXN`;
+    }
+
+    document.getElementById('btn-ticket').onclick = () => {
+        const des = document.getElementById('nota-desglose');
+        des.innerHTML = '';
+        serviciosSeleccionados.forEach(s => {
+            des.innerHTML += `<div style="display:flex;justify-content:space-between"><span>${s.nombre}</span><span>$${s.precio}</span></div>`;
+        });
+        document.getElementById('nota-total').innerText = `$${totalGeneral.toFixed(2)} MXN`;
+        document.getElementById('fina-nota').style.display = 'block';
+    };
+
+    renderCatTrabajo('todos');
+</script>
+</body>
+</html>
