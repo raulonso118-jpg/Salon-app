@@ -4,7 +4,7 @@ import json
 import os
 import base64
 import io
-import threading  # 🚀 Importante para que no se congele en GitHub Actions
+import threading
 import time
 import numpy as np
 from PIL import Image, ImageFilter
@@ -18,10 +18,8 @@ def relu_mod_211(S):
 
 def procesar_matriz_rostro(img_pil, tono_r, tono_g, tono_b, brillo, contraste, suavizado):
     arr = np.array(img_pil, dtype=np.float32)
-
     factor_brillo = relu_mod_211(brillo) / 50.0
     factor_contraste = relu_mod_211(contraste) / 50.0
-
     arr = (arr - 128.0) * factor_contraste + 128.0 + (factor_brillo * 25.5)
 
     if tono_r != 100 or tono_g != 100 or tono_b != 100:
@@ -85,43 +83,55 @@ class HandlerProcesador(http.server.SimpleHTTPRequestHandler):
 
 PORT = 8080
 
-# Intentar cambiar de directorio de forma segura
-try:
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
-except Exception:
-    pass
+# 🚀 FORZAR RUTA: Asegura que el servidor corra exactamente donde están index.html y main.py
+ruta_raiz = os.path.dirname(os.path.abspath(__file__))
+os.chdir(ruta_raiz)
 
 def iniciar_servidor():
     print(f"--- Servidor en Puerto {PORT} http://localhost:8080/index.html ---")
-    # Permitir la reutilización del puerto para evitar bloqueos si reinicias la app rápido
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer(("", PORT), HandlerProcesador) as httpd:
         httpd.serve_forever()
 
-# 🚀 EJECUCIÓN ASÍNCRONA: Levantamos el servidor en un hilo secundario
-# Esto permite que Buildozer termine su análisis sin que el proceso principal se quede congelado
+# Servidor en segundo plano para evitar congelamientos
 server_thread = threading.Thread(target=iniciar_servidor)
 server_thread.daemon = True
 server_thread.start()
 
-# --- INTERFAZ MÍNIMA OBLIGATORIA PARA ANDROID (KIVY) ---
-# Android requiere una ventana nativa de Kivy para mantenerse abierto y renderizar tu WebView
+# --- INTERFAZ KIVY CON WEBVIEW NATIVO PARA ANDROID ---
 try:
     from kivy.app import App
-    from kivy.uix.label import Label
+    from kivy.uix.modalview import ModalView
+    # Importación nativa de Android para incrustar tu HTML en la pantalla del celular
+    from jnius import autoclass
     
     class SalonStudioApp(App):
         def build(self):
-            # Esta etiqueta se mostrará de fondo en el celular mientras corre el servidor
-            return Label(text="Servidor Salon Studio Pro Activo en puerto 8080")
+            # Usamos la actividad nativa de Android para renderizar el navegador dentro del APK
+            PythonActivity = autoclass('org.kivy.android.PythonActivity')
+            activity = PythonActivity.mActivity
+            
+            WebView = autoclass('android.webkit.WebView')
+            WebViewClient = autoclass('android.webkit.WebViewClient')
+            
+            # Crear el componente web en el hilo de la interfaz de Android
+            browser = WebView(activity)
+            browser.getSettings().setJavaScriptEnabled(True)
+            browser.getSettings().setDomStorageEnabled(True) # Requerido para cámaras web
+            browser.setWebViewClient(WebViewClient())
+            
+            # Cargar tu index.html local
+            browser.loadUrl(f"http://localhost:{PORT}/index.html")
+            
+            activity.setContentView(browser)
+            return browser
             
     if __name__ == '__main__':
         SalonStudioApp().run()
-except ImportError:
-    # Respaldo por si se ejecuta localmente en PC donde no tengas Kivy instalado
-    print("Kivy no detectado, manteniendo el hilo activo...")
+except Exception as e:
+    print("Entorno de desarrollo PC o Kivy nativo ausente. Manteniendo servidor activo de prueba...")
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("Servidor detenido.")
+        pass
