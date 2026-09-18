@@ -1,8 +1,8 @@
 [app]
-source.dir = .
 title = Salon Studio Pro
 package.name = salonstudiopro
 package.domain = org.salon
+source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,html,js,css
 source.include_dir = assets
 source.main_file = main.py
