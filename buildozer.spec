@@ -1,4 +1,5 @@
 [app]
+source.dir = .
 title = Salon Studio Pro
 package.name = salonstudiopro
 package.domain = org.salon
