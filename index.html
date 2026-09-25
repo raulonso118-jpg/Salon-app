@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salon Studio Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(102, 126, 234, 0.4);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(102, 126, 234, 0.4);
+        }
+
+        .value-display {
+            background: #f0f0f0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            min-width: 45px;
+            text-align: center;
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .color-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .color-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-input small {
+            color: #666;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .color-input input[type="color"] {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e0e0e0;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .preview-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .preview-title {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        #videoPreview {
+            width: 100%;
+            border-radius: 10px;
+            background: #000;
+            display: none;
+        }
+
+        #imagePreview {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+            display: none;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .loading.active::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            font-size: 13px;
+            border-left: 4px solid #c33;
+        }
+
+        .success {
+            background: #efe;
+            color: #3c3;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            font-size: 13px;
+            border-left: 4px solid #3c3;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💇 Salon Studio Pro</h1>
+        <p class="subtitle">Simulador de Edición de Rostro</p>
+
+        <!-- Video Preview -->
+        <div class="preview-section">
+            <div class="preview-title">📷 Vista Previa en Vivo</div>
+            <video id="videoPreview" autoplay playsinline muted></video>
+        </div>
+
+        <!-- Color Controls -->
+        <div class="control-group">
+            <label>🎨 Tonos de Color</label>
+            <div class="color-controls">
+                <div class="color-input">
+                    <input type="color" id="tonoR" value="#ff0000" title="Tono Rojo">
+                    <small>Rojo</small>
+                </div>
+                <div class="color-input">
+                    <input type="color" id="tonoG" value="#00ff00" title="Tono Verde">
+                    <small>Verde</small>
+                </div>
+                <div class="color-input">
+                    <input type="color" id="tonoB" value="#0000ff" title="Tono Azul">
+                    <small>Azul</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brightness Control -->
+        <div class="control-group">
+            <label>☀️ Brillo</label>
+            <div class="slider-container">
+                <input type="range" id="brillo" min="0" max="100" value="50">
+                <div class="value-display"><span id="brilloValue">50</span>%</div>
+            </div>
+        </div>
+
+        <!-- Contrast Control -->
+        <div class="control-group">
+            <label>⚫⚪ Contraste</label>
+            <div class="slider-container">
+                <input type="range" id="contraste" min="0" max="100" value="50">
+                <div class="value-display"><span id="contrasteValue">50</span>%</div>
+            </div>
+        </div>
+
+        <!-- Smoothing Control -->
+        <div class="control-group">
+            <label>✨ Suavizado</label>
+            <div class="slider-container">
+                <input type="range" id="suavizado" min="0" max="100" value="0">
+                <div class="value-display"><span id="suavizadoValue">0</span>%</div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="button-group">
+            <button class="btn-primary" onclick="capturarFoto()">📸 Capturar</button>
+            <button class="btn-secondary" onclick="resetearControles()">🔄 Reiniciar</button>
+        </div>
+
+        <!-- Processing Button -->
+        <button class="btn-primary" style="width: 100%; margin-top: 12px;" onclick="procesarImagen()" id="btnProcesar" disabled>
+            🚀 Procesar Imagen
+        </button>
+
+        <!-- Image Preview -->
+        <img id="imagePreview" alt="Imagen capturada">
+
+        <!-- Loading and Messages -->
+        <div class="loading" id="loading">Procesando imagen</div>
+        <div class="error" id="error"></div>
+        <div class="success" id="success"></div>
+    </div>
+
+    <script>
+        let video = document.getElementById('videoPreview');
+        let canvas = null;
+        let fotoCapturada = null;
+
+        // Inicializar cámara
+        async function iniciarCamara() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user', width: { ideal: 480 }, height: { ideal: 640 } }
+                });
+                video.srcObject = stream;
+                video.style.display = 'block';
+            } catch (error) {
+                mostrarError('No se pudo acceder a la cámara: ' + error.message);
+            }
+        }
+
+        // Capturar foto
+        function capturarFoto() {
+            if (!canvas) {
+                canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+            }
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            fotoCapturada = canvas.toDataURL('image/jpeg');
+            document.getElementById('imagePreview').src = fotoCapturada;
+            document.getElementById('imagePreview').style.display = 'block';
+            document.getElementById('btnProcesar').disabled = false;
+            mostrarExito('Foto capturada. Ajusta los controles y presiona Procesar.');
+        }
+
+        // Procesar imagen
+        async function procesarImagen() {
+            if (!fotoCapturada) {
+                mostrarError('Primero debes capturar una foto');
+                return;
+            }
+
+            const tonoR = rgbDeHex(document.getElementById('tonoR').value, 0);
+            const tonoG = rgbDeHex(document.getElementById('tonoG').value, 1);
+            const tonoB = rgbDeHex(document.getElementById('tonoB').value, 2);
+            const brillo = parseFloat(document.getElementById('brillo').value);
+            const contraste = parseFloat(document.getElementById('contraste').value);
+            const suavizado = parseFloat(document.getElementById('suavizado').value);
+
+            const datos = {
+                imagen: fotoCapturada,
+                tono_r: tonoR,
+                tono_g: tonoG,
+                tono_b: tonoB,
+                brillo: brillo,
+                contraste: contraste,
+                suavizado: suavizado
+            };
+
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('btnProcesar').disabled = true;
+
+            try {
+                const respuesta = await fetch('http://localhost:8080/api/procesar_rostro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datos)
+                });
+
+                const resultado = await respuesta.json();
+                if (resultado.estatus === 'ok') {
+                    document.getElementById('imagePreview').src = resultado.imagen_procesada;
+                    mostrarExito('¡Imagen procesada correctamente!');
+                } else {
+                    mostrarError('Error en la API: ' + resultado.error);
+                }
+            } catch (error) {
+                mostrarError('Error al procesar: ' + error.message);
+            } finally {
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('btnProcesar').disabled = false;
+            }
+        }
+
+        // Convertir hex a RGB
+        function rgbDeHex(hex, canal) {
+            const rgb = parseInt(hex.substring(1), 16);
+            const r = (rgb >> 16) & 255;
+            const g = (rgb >> 8) & 255;
+            const b = rgb & 255;
+            const valores = [r, g, b];
+            return (valores[canal] / 255) * 100;
+        }
+
+        // Resetear controles
+        function resetearControles() {
+            document.getElementById('tonoR').value = '#ff0000';
+            document.getElementById('tonoG').value = '#00ff00';
+            document.getElementById('tonoB').value = '#0000ff';
+            document.getElementById('brillo').value = 50;
+            document.getElementById('contraste').value = 50;
+            document.getElementById('suavizado').value = 0;
+            document.getElementById('brilloValue').textContent = '50';
+            document.getElementById('contrasteValue').textContent = '50';
+            document.getElementById('suavizadoValue').textContent = '0';
+            limpiarMensajes();
+        }
+
+        // Actualizar valores
+        document.getElementById('brillo').addEventListener('input', (e) => {
+            document.getElementById('brilloValue').textContent = e.target.value;
+        });
+        document.getElementById('contraste').addEventListener('input', (e) => {
+            document.getElementById('contrasteValue').textContent = e.target.value;
+        });
+        document.getElementById('suavizado').addEventListener('input', (e) => {
+            document.getElementById('suavizadoValue').textContent = e.target.value;
+        });
+
+        // Funciones de mensajes
+        function mostrarError(msg) {
+            document.getElementById('error').textContent = msg;
+            document.getElementById('error').style.display = 'block';
+            setTimeout(() => limpiarMensajes(), 5000);
+        }
+
+        function mostrarExito(msg) {
+            document.getElementById('success').textContent = msg;
+            document.getElementById('success').style.display = 'block';
+            setTimeout(() => limpiarMensajes(), 5000);
+        }
+
+        function limpiarMensajes() {
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('success').style.display = 'none';
+        }
+
+        // Iniciar cuando carga
+        window.addEventListener('load', iniciarCamara);
+    </script>
+</body>
+</html>
