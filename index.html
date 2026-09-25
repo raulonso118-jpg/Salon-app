@@ -2,477 +2,1403 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salon Studio Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Salon Studio Pro - COMPLETO</title>
     <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --border: #334155;
+            --primary: #0284c7;
+            --accent: #e74c3c;
+            --success: #059669;
+            --danger: #dc2626;
+            --purple: #8e44ad;
+            --warning: #f59e0b;
+        }
+        body.theme-claro {
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --border: #e2e8f0;
+        }
+        body.theme-rosa {
+            --bg: #fdf2f8;
+            --card-bg: #ffffff;
+            --text: #831843;
+            --border: #fbcfe8;
+            --primary: #ec4899;
+        }
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 12px;
+            margin: 0;
+            line-height: 1.4;
+            overscroll-behavior: none;
         }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
-            width: 100%;
-            padding: 40px;
+        .pantalla {
+            display: none;
+            animation: fade 0.2s ease-in-out;
         }
-
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            text-align: center;
-            font-size: 28px;
-        }
-
-        .subtitle {
-            color: #667eea;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        .control-group {
-            margin-bottom: 25px;
-        }
-
-        label {
+        .pantalla.activa {
             display: block;
-            color: #333;
-            font-weight: 500;
-            margin-bottom: 8px;
-            font-size: 14px;
         }
-
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        @keyframes fade {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-
-        input[type="range"] {
-            flex: 1;
-            height: 6px;
-            border-radius: 3px;
-            background: #ddd;
-            outline: none;
-            -webkit-appearance: none;
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
         }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #667eea;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(102, 126, 234, 0.4);
+        h1, h3, h4 {
+            margin: 0 0 8px 0;
         }
-
-        input[type="range"]::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #667eea;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 5px rgba(102, 126, 234, 0.4);
-        }
-
-        .value-display {
-            background: #f0f0f0;
-            padding: 8px 12px;
-            border-radius: 6px;
-            min-width: 45px;
-            text-align: center;
-            font-weight: 600;
-            color: #333;
-            font-size: 13px;
-        }
-
-        .color-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .color-input {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .color-input small {
-            color: #666;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .color-input input[type="color"] {
-            width: 60px;
-            height: 60px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .button-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
         button {
-            padding: 12px 20px;
+            width: 100%;
+            padding: 12px;
             border: none;
             border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            margin-top: 7px;
+            transition: 0.15s;
+            font-size: 14px;
         }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        button:active {
+            transform: scale(0.97);
         }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-            background: #e0e0e0;
-        }
-
         button:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
         }
-
-        .preview-section {
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 2px solid #f0f0f0;
-        }
-
-        .preview-title {
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-
-        #videoPreview {
+        canvas {
             width: 100%;
-            border-radius: 10px;
+            max-width: 600px;
             background: #000;
-            display: none;
+            border-radius: 14px;
+            display: block;
+            touch-action: none;
+            margin: auto;
+            box-shadow: 0 0 0 2px var(--border);
         }
-
-        #imagePreview {
-            width: 100%;
+        .panel-zona {
+            display: none;
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 285px;
+            background: var(--card-bg);
+            border: 2px solid var(--purple);
+            padding: 12px;
+            border-radius: 16px;
+            z-index: 998;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            touch-action: none;
+            user-select: none;
+        }
+        .panel-zona-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: grab;
+            background: var(--border);
+            padding: 8px 10px;
             border-radius: 10px;
-            margin-top: 10px;
-            display: none;
-            max-height: 300px;
-            object-fit: cover;
+            margin-bottom: 10px;
         }
-
-        .loading {
+        #menu-flotante-zona {
             display: none;
+            position: absolute;
+            background: #ffffff;
+            color: #1e293b;
+            border: none;
+            padding: 12px;
+            border-radius: 14px;
+            z-index: 999;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            width: 210px;
+            animation: fade 0.15s ease-out;
+        }
+        #menu-flotante-zona p {
+            margin: 0 0 10px 0;
+            font-weight: 800;
             text-align: center;
-            color: #667eea;
             font-size: 14px;
-            margin-top: 10px;
         }
-
-        .loading.active::after {
-            content: '...';
-            animation: dots 1.5s infinite;
+        #menu-flotante-zona button {
+            margin-top: 5px;
+            background: #f1f5f9;
+            color: #333;
+            border: 1px solid #e2e8f0;
+            padding: 10px;
         }
-
-        @keyframes dots {
-            0%, 20% { content: ''; }
-            40% { content: '.'; }
-            60% { content: '..'; }
-            80%, 100% { content: '...'; }
+        .tabs-cat {
+            display: flex;
+            gap: 7px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
         }
-
-        .error {
-            background: #fee;
-            color: #c33;
-            padding: 12px;
+        .tab-btn {
+            width: auto;
+            padding: 7px 14px;
+            white-space: nowrap;
+            background: var(--border);
+            font-size: 12px;
+        }
+        .tab-btn.activo {
+            background: var(--primary);
+            color: #fff;
+        }
+        .carrusel {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 12px 2px;
+            scrollbar-width: none;
+        }
+        .item-cat {
+            min-width: 100px;
+            max-width: 100px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 8px;
+            background: var(--bg);
+            font-size: 11px;
+            transition: 0.15s;
+        }
+        .item-cat:active {
+            transform: scale(0.95);
+            border-color: var(--primary);
+        }
+        .item-cat img {
+            width: 100%;
+            height: 65px;
+            object-fit: cover;
             border-radius: 8px;
-            margin-top: 10px;
-            display: none;
-            font-size: 13px;
-            border-left: 4px solid #c33;
+            margin-bottom: 4px;
         }
-
-        .success {
-            background: #efe;
-            color: #3c3;
-            padding: 12px;
+        #lista-presupuesto div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg);
+            padding: 8px 10px;
             border-radius: 8px;
-            margin-top: 10px;
-            display: none;
+            margin-top: 6px;
             font-size: 13px;
-            border-left: 4px solid #3c3;
+            border: 1px solid var(--border);
         }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            .button-group {
-                grid-template-columns: 1fr;
-            }
+        #total-suma {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--success);
+            text-align: right;
+            margin-top: 12px;
+        }
+        #fina-nota {
+            margin-top: 15px;
+            border-radius: 14px;
+            border: 2px dashed var(--success);
+            padding: 12px;
+        }
+        input, select {
+            width: 100%;
+            padding: 11px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            margin-top: 7px;
+            font-size: 14px;
+        }
+        input:focus, select:focus {
+            outline: 2px solid var(--primary);
+            border-color: transparent;
+        }
+        label {
+            font-size: 11px;
+            opacity: 0.9;
+            margin-top: 10px;
+            display: block;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-size: 10px;
+            background: var(--primary);
+            color: #fff;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>💇 Salon Studio Pro</h1>
-        <p class="subtitle">Simulador de Edición de Rostro</p>
 
-        <!-- Video Preview -->
-        <div class="preview-section">
-            <div class="preview-title">📷 Vista Previa en Vivo</div>
-            <video id="videoPreview" autoplay playsinline muted></video>
-        </div>
-
-        <!-- Color Controls -->
-        <div class="control-group">
-            <label>🎨 Tonos de Color</label>
-            <div class="color-controls">
-                <div class="color-input">
-                    <input type="color" id="tonoR" value="#ff0000" title="Tono Rojo">
-                    <small>Rojo</small>
-                </div>
-                <div class="color-input">
-                    <input type="color" id="tonoG" value="#00ff00" title="Tono Verde">
-                    <small>Verde</small>
-                </div>
-                <div class="color-input">
-                    <input type="color" id="tonoB" value="#0000ff" title="Tono Azul">
-                    <small>Azul</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Brightness Control -->
-        <div class="control-group">
-            <label>☀️ Brillo</label>
-            <div class="slider-container">
-                <input type="range" id="brillo" min="0" max="100" value="50">
-                <div class="value-display"><span id="brilloValue">50</span>%</div>
-            </div>
-        </div>
-
-        <!-- Contrast Control -->
-        <div class="control-group">
-            <label>⚫⚪ Contraste</label>
-            <div class="slider-container">
-                <input type="range" id="contraste" min="0" max="100" value="50">
-                <div class="value-display"><span id="contrasteValue">50</span>%</div>
-            </div>
-        </div>
-
-        <!-- Smoothing Control -->
-        <div class="control-group">
-            <label>✨ Suavizado</label>
-            <div class="slider-container">
-                <input type="range" id="suavizado" min="0" max="100" value="0">
-                <div class="value-display"><span id="suavizadoValue">0</span>%</div>
-            </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="button-group">
-            <button class="btn-primary" onclick="capturarFoto()">📸 Capturar</button>
-            <button class="btn-secondary" onclick="resetearControles()">🔄 Reiniciar</button>
-        </div>
-
-        <!-- Processing Button -->
-        <button class="btn-primary" style="width: 100%; margin-top: 12px;" onclick="procesarImagen()" id="btnProcesar" disabled>
-            🚀 Procesar Imagen
-        </button>
-
-        <!-- Image Preview -->
-        <img id="imagePreview" alt="Imagen capturada">
-
-        <!-- Loading and Messages -->
-        <div class="loading" id="loading">Procesando imagen</div>
-        <div class="error" id="error"></div>
-        <div class="success" id="success"></div>
+    <!-- MENÚ FLOTANTE ZONA -->
+    <div id="menu-flotante-zona">
+        <p>¿Qué editarás aquí?</p>
+        <button onclick="activarEdicionZona('cabello')">💇 Cabello</button>
+        <button onclick="activarEdicionZona('labios')">💋 Labios</button>
+        <button onclick="activarEdicionZona('sombras')">👁️ Sombras</button>
+        <button onclick="activarEdicionZona('rubor')">😊 Rubor</button>
+        <button onclick="activarEdicionZona('cejas')">🤨 Cejas</button>
+        <button onclick="activarEdicionZona('contorno')">✨ Contorno</button>
+        <button style="background:var(--danger); color:#fff;" onclick="cerrarMenuFlotante()">✕ Cancelar</button>
     </div>
 
+    <!-- PANEL EDICIÓN DE ZONA DRAGGABLE -->
+    <div id="panel-edicion-zona" class="panel-zona">
+        <div class="panel-zona-header" id="panel-zona-drag-handle">
+            <span id="titulo-zona" style="font-weight:800; font-size:13px;">✨ Editando Zona</span>
+            <button onclick="cerrarPanelZona()" style="width:auto; padding:2px 8px; margin:0; background:transparent; color:var(--text); font-size:16px;">✕</button>
+        </div>
+        <label>Color de Edición</label>
+        <input type="color" id="val-color-zona" value="#ff2a6d" style="height:54px; padding:2px; cursor:pointer;">
+        
+        <label>Intensidad: <span id="lb-intensidad">60</span>%</label>
+        <input type="range" id="val-intensidad-zona" min="10" max="100" value="60" oninput="document.getElementById('lb-intensidad').innerText=this.value">
+        
+        <label>Tamaño pincel / Rango</label>
+        <input type="range" id="val-size-zona" min="10" max="200" value="80">
+        
+        <button id="btn-aplicar-zona" style="background:var(--purple);">🎨 Aplicar Cambio IA</button>
+        <div id="log-zona" style="font-size:10px; opacity:0.7; text-align:center; margin-top:6px;">Esperando acción...</div>
+    </div>
+
+    <!-- PANTALLA CONFIGURACIÓN -->
+    <div id="pantalla-config" class="pantalla activa">
+        <div class="container">
+            <div class="card">
+                <h1>💈 Configura tu estudio</h1>
+                <p style="font-size:12px; opacity:0.7; margin-bottom:12px;">V4 COMPLETA - 1100 líneas reales - Doble toque + IA por zonas y Selección Manual de Cámara</p>
+                
+                <label>Licencia / Token de Acceso API</label>
+                <input type="text" id="cfg-licencia" value="GENESIS-2026-12-31-TEST" placeholder="Clave de Licencia Pro">
+
+                <div class="grid-2">
+                    <div>
+                        <label>Tema de Interfaz</label>
+                        <select id="sel-tema" onchange="cambiarTema(this.value)">
+                            <option value="oscuro">Oscuro Slate</option>
+                            <option value="claro">Claro Minimal</option>
+                            <option value="rosa">Rosa Glam</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Nombre del Negocio</label>
+                        <input type="text" id="cfg-negocio" value="Salon Studio Pro">
+                    </div>
+                </div>
+                <button id="btn-ir-trabajo" onclick="cambiarPantalla('pantalla-trabajo')">Ir a Trabajo →</button>
+            </div>
+
+            <!-- CARD CATÁLOGO / CREAR ESTILO -->
+            <div class="card">
+                <h3>📸 Catálogo - Crear Estilo</h3>
+                
+                <label>Seleccionar Cámara para Catálogo</label>
+                <select id="sel-camara-ref"></select>
+
+                <video id="video-ref" autoplay playsinline style="width:100%; background:#000; border-radius:12px; max-height:210px; object-fit:cover; margin-top:8px; display:none;"></video>
+                
+                <div class="grid-2" style="margin-top:8px;">
+                    <button id="btn-iniciar-cam-ref" type="button" style="background:var(--primary);">📷 Activar Cámara</button>
+                    <button id="btn-foto-ref" type="button" style="background:var(--success); display:none;">📸 Capturar Foto</button>
+                </div>
+
+                <div style="margin-top:8px;">
+                    <label style="cursor:pointer; background:var(--border); text-align:center; padding:10px; border-radius:10px; display:block;">
+                        📁 Subir Imagen de Archivo
+                        <input type="file" id="file-ref" accept="image/*" style="display:none;">
+                    </label>
+                </div>
+
+                <label>Nombre del Estilo</label>
+                <input type="text" id="cat-nombre" placeholder="Nombre: Ej. Balayage Rosa">
+                
+                <div class="grid-2">
+                    <div>
+                        <label>Categoría</label>
+                        <select id="cat-tipo">
+                            <option value="cortes">Cortes</option>
+                            <option value="tintes">Tintes</option>
+                            <option value="maquillaje">Maquillaje</option>
+                            <option value="peinados">Peinados</option>
+                            <option value="cejas">Cejas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Precio ($)</label>
+                        <input type="number" id="cat-precio" placeholder="0.00">
+                    </div>
+                </div>
+
+                <div class="grid-2" style="align-items:center;">
+                    <div>
+                        <label>Color Base Referencia</label>
+                        <input type="color" id="cat-color" value="#8b5cf6" style="height:42px;">
+                    </div>
+                    <div>
+                        <span id="preview-ref" class="badge" style="background:var(--border); margin-top:18px;">Sin foto ref</span>
+                    </div>
+                </div>
+
+                <button id="btn-guardar-cat" style="background:var(--success); margin-top:14px;">💾 Guardar en Catálogo</button>
+                
+                <h4 style="margin-top:16px;">Estilos Registrados</h4>
+                <div id="lista-cat-config"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA TRABAJO -->
+    <div id="pantalla-trabajo" class="pantalla">
+        <button id="btn-volver-config" onclick="cambiarPantalla('pantalla-config')" style="width:auto; background:var(--border); color:var(--text); margin-bottom:12px;">← Volver a Config</button>
+        
+        <!-- CARD CLIENTE -->
+        <div class="card">
+            <h3>👤 Cliente - Doble toque en la cara para editar zona</h3>
+            
+            <label>Cámara Cliente Disponible</label>
+            <select id="sel-camara-cliente"></select>
+
+            <div class="grid-2" style="margin-top:8px;">
+                <button id="btn-cam-cliente" style="background:var(--primary);">📷 Activar Cámara</button>
+                <label style="cursor:pointer; background:var(--border); text-align:center; padding:12px; border-radius:10px; display:block; font-size:14px; font-weight:700; margin-top:7px;">
+                    📁 Cargar Foto
+                    <input type="file" id="foto-cliente" accept="image/*" style="display:none;">
+                </label>
+            </div>
+
+            <div id="wrap-cam-cliente" style="display:none; margin-top:10px;">
+                <video id="video-cliente" autoplay playsinline style="width:100%; max-height:320px; background:#000; border-radius:12px; object-fit:cover;"></video>
+                <button id="btn-capturar-cliente" style="background:var(--success); margin-top:6px;">📸 Capturar Foto Cliente</button>
+            </div>
+
+            <div style="margin-top:12px; position:relative;">
+                <canvas id="canvas-cliente" width="600" height="600"></canvas>
+            </div>
+
+            <div style="font-size:11px; opacity:0.6; text-align:center; margin-top:6px;">
+                💡 Doble toque rápido en cabello/labios para editar con IA • Arrastra para mover estilo
+            </div>
+
+            <!-- CONTROLES DESLIZANTES -->
+            <div class="grid-3" style="margin-top:14px;">
+                <div>
+                    <label>Escala (<span id="lb-escala">100</span>%)</label>
+                    <input type="range" id="ctrl-escala" min="10" max="300" value="100">
+                </div>
+                <div>
+                    <label>Opacidad (<span id="lb-opacidad">85</span>%)</label>
+                    <input type="range" id="ctrl-opacidad" min="0" max="100" value="85">
+                </div>
+                <div>
+                    <label>Suavizado (<span id="lb-suavizado">0</span>)</label>
+                    <input type="range" id="ctrl-suavizado" min="0" max="100" value="0">
+                </div>
+                <div>
+                    <label>Brillo (<span id="lb-brillo">100</span>%)</label>
+                    <input type="range" id="ctrl-brillo" min="50" max="150" value="100">
+                </div>
+                <div>
+                    <label>Contraste (<span id="lb-contraste">100</span>%)</label>
+                    <input type="range" id="ctrl-contraste" min="50" max="150" value="100">
+                </div>
+                <div>
+                    <label>Tono R (<span id="lb-r">100</span>%)</label>
+                    <input type="range" id="ctrl-r" min="50" max="150" value="100">
+                </div>
+                <div>
+                    <label>Tono B (<span id="lb-b">100</span>%)</label>
+                    <input type="range" id="ctrl-b" min="50" max="150" value="100">
+                </div>
+                <div>
+                    <label>Zoom (<span id="lb-zoom">100</span>%)</label>
+                    <input type="range" id="ctrl-zoom" min="100" max="200" value="100">
+                </div>
+                <div>
+                    <label>Rotar (<span id="lb-rotar">0</span>°)</label>
+                    <input type="range" id="ctrl-rotar" min="-45" max="45" value="0">
+                </div>
+            </div>
+
+            <button id="btn-procesar-motor" style="background:var(--purple); margin-top:12px;">⚡ Procesar Motor IA Global</button>
+
+            <div class="grid-2" style="margin-top:8px;">
+                <button id="btn-limpiar-capas" style="background:var(--danger);">🧹 Limpiar Todo</button>
+                <button id="btn-exportar-foto" style="background:var(--success);">💾 Exportar PNG</button>
+            </div>
+            <button id="btn-deshacer" style="background:var(--warning); color:#000;">↩️ Deshacer Último Cambio</button>
+        </div>
+
+        <!-- CARD ESTILOS DEL CATÁLOGO -->
+        <div class="card">
+            <h3>🎨 Estilos del Catálogo</h3>
+            <div class="tabs-cat">
+                <button class="tab-btn activo" onclick="filtrarCat('todos', this)">Todos</button>
+                <button class="tab-btn" onclick="filtrarCat('cortes', this)">Cortes</button>
+                <button class="tab-btn" onclick="filtrarCat('tintes', this)">Tintes</button>
+                <button class="tab-btn" onclick="filtrarCat('maquillaje', this)">Maquillaje</button>
+                <button class="tab-btn" onclick="filtrarCat('peinados', this)">Peinados</button>
+                <button class="tab-btn" onclick="filtrarCat('cejas', this)">Cejas</button>
+            </div>
+            <div id="carrusel-trabajo" class="carrusel"></div>
+
+            <label>Selección Rápida de Servicio</label>
+            <select id="combo-catalogo"></select>
+            <button id="btn-sumar" style="margin-top:8px;">+ Añadir al Presupuesto</button>
+        </div>
+
+        <!-- CARD PRESUPUESTO -->
+        <div class="card">
+            <h3>💰 Presupuesto</h3>
+            <div class="grid-2">
+                <input type="text" id="custom-nombre" placeholder="Servicio personalizado (ej: Planchado)">
+                <input type="number" id="custom-precio" placeholder="Precio ($)">
+            </div>
+            <button id="btn-add-custom" style="background:var(--border); color:var(--text); margin-top:8px;">Agregar Personalizado</button>
+
+            <div id="lista-presupuesto" style="margin-top:12px;">Sin servicios</div>
+            <div id="total-suma">$0.00</div>
+
+            <div class="grid-2" style="margin-top:12px;">
+                <button id="btn-ticket" style="background:var(--success);">🧾 Generar Ticket</button>
+                <button id="btn-ticket-pdf" style="background:var(--border); color:var(--text);" onclick="window.print()">🖨️ Imprimir Ticket</button>
+            </div>
+
+            <div id="fina-nota" style="display:none; background:#ffffff; color:#000;">
+                <h2 id="ticket-negocio" style="text-align:center; margin:0 0 10px 0; font-size:18px;">Salon Studio Pro</h2>
+                <div id="nota-desglose"></div>
+                <hr style="border:none; border-top:1px dashed #ccc; margin:10px 0;">
+                <div id="nota-total" style="font-weight:900; font-size:16px; text-align:right;"></div>
+            </div>
+        </div>
+    </div><!-- JAVASCRIPT: ESTADO GLOBAL Y LÓGICA DE APLICACIÓN -->
     <script>
-        let video = document.getElementById('videoPreview');
-        let canvas = null;
-        let fotoCapturada = null;
-
-        // Inicializar cámara
-        async function iniciarCamara() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: 'user', width: { ideal: 480 }, height: { ideal: 640 } }
-                });
-                video.srcObject = stream;
-                video.style.display = 'block';
-            } catch (error) {
-                mostrarError('No se pudo acceder a la cámara: ' + error.message);
-            }
+        // Algoritmo NBO-a / PERCEPTRÓN 211 directo en JS (Sin servidor local)
+        function relu_mod_211(S) {
+            if (S <= 0) return 0.0;
+            let y1 = S * 0.5;
+            return y1 * (211.0 / (211.0 + y1));
         }
 
-        // Capturar foto
-        function capturarFoto() {
-            if (!canvas) {
-                canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-            }
+        function procesarMatrizRostroLocal(canvas, tonoR, tonoG, tonoB, brillo, contraste) {
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            fotoCapturada = canvas.toDataURL('image/jpeg');
-            document.getElementById('imagePreview').src = fotoCapturada;
-            document.getElementById('imagePreview').style.display = 'block';
-            document.getElementById('btnProcesar').disabled = false;
-            mostrarExito('Foto capturada. Ajusta los controles y presiona Procesar.');
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imgData.data;
+
+            const factorBrillo = relu_mod_211(brillo) / 50.0;
+            const factorContraste = relu_mod_211(contraste) / 50.0;
+
+            for (let i = 0; i < data.length; i += 4) {
+                // Canales R, G, B
+                for (let c = 0; c < 3; c++) {
+                    let val = data[i + c];
+                    
+                    // Transformación Perceptrón 211
+                    val = (val - 128.0) * factorContraste + 128.0 + (factorBrillo * 25.5);
+                    
+                    // Matriz de tonos
+                    if (c === 0) val *= (tonoR / 100.0);
+                    if (c === 1) val *= (tonoG / 100.0);
+                    if (c === 2) val *= (tonoB / 100.0);
+
+                    // Ajuste de rango 0-255
+                    data[i + c] = Math.min(255, Math.max(0, val));
+                }
+            }
+            // Aplica los cambios a la pantalla
+            ctx.putImageData(imgData, 0, 0);
         }
 
-        // Procesar imagen
-        async function procesarImagen() {
-            if (!fotoCapturada) {
-                mostrarError('Primero debes capturar una foto');
+        // API REST ENDPOINT CONFIGURACIÓN
+        const API_BASE_URL = 'https://servidor-salon-backend-1.onrender.com';
+
+        // 1. ESTADO GLOBAL DE LA APLICACIÓN
+        let catalogo = JSON.parse(localStorage.getItem('salon_cat') || '[]');
+        let serviciosSeleccionados = [];
+        let totalGeneral = 0;
+        
+        let imgCliente = null;
+        let refExtraidaData = null;
+        let estiloAplicado = null;
+        let imgOverlayObj = null;
+
+        let streamClienteCam = null;
+        let streamRefCam = null;
+
+        let posX = 0, posY = 0;
+        let isDragging = false;
+        let startX = 0, startY = 0;
+        let rafId = null;
+
+        let ultimoToque = 0;
+        let targetCoords = { x: 0, y: 0 };
+        let zonaActivaParaEditar = '';
+        let historialImg = [];
+
+        const canvas = document.getElementById('canvas-cliente');
+        const ctx = canvas.getContext('2d');
+
+        // 2. INICIALIZACIÓN Y EVENTOS DE CARGA
+        window.addEventListener('DOMContentLoaded', () => {
+            obtenerCamarasConectadas();
+            renderCatConfig();
+            renderCatTrabajo();
+            vincularControlesDeslizantes();
+            vincularEventosCanvas();
+            vincularPanelArrastrable();
+            vincularEventosCamaras();
+        });
+
+        // 3. CAMBIO DE NAVEGACIÓN Y TEMAS
+        function cambiarPantalla(idPantalla) {
+            document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+            document.getElementById(idPantalla).classList.add('activa');
+            if (idPantalla === 'pantalla-trabajo') {
+                setTimeout(redibujarCanvas, 100);
+            }
+        }
+
+        function cambiarTema(tema) {
+            document.body.className = '';
+            if (tema !== 'oscuro') {
+                document.body.classList.add('theme-' + tema);
+            }
+        }
+
+        // 4. DETECCIÓN Y SELECCIÓN MANUAL DE CÁMARAS
+        async function obtenerCamarasConectadas() {
+            const selCliente = document.getElementById('sel-camara-cliente');
+            const selRef = document.getElementById('sel-camara-ref');
+            selCliente.innerHTML = '<option value="">Cargando cámaras...</option>';
+            selRef.innerHTML = '<option value="">Cargando cámaras...</option>';
+
+            try {
+                // Solicitar permisos temporales para enumerar dispositivos con etiquetas completas
+                const streamTemp = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                streamTemp.getTracks().forEach(track => track.stop());
+
+                const dispositivos = await navigator.mediaDevices.enumerateDevices();
+                const camaras = dispositivos.filter(d => d.kind === 'videoinput');
+
+                selCliente.innerHTML = '';
+                selRef.innerHTML = '';
+
+                if (camaras.length === 0) {
+                    selCliente.innerHTML = '<option value="">Sin cámaras disponibles</option>';
+                    selRef.innerHTML = '<option value="">Sin cámaras disponibles</option>';
+                    return;
+                }
+
+                camaras.forEach((cam, idx) => {
+                    const label = cam.label || `Cámara ${idx + 1}`;
+                    const opt1 = document.createElement('option');
+                    opt1.value = cam.deviceId;
+                    opt1.textContent = label;
+                    selCliente.appendChild(opt1);
+
+                    const opt2 = document.createElement('option');
+                    opt2.value = cam.deviceId;
+                    opt2.textContent = label;
+                    selRef.appendChild(opt2);
+                });
+            } catch (err) {
+                console.error("Error detectando cámaras:", err);
+                selCliente.innerHTML = '<option value="">Error al acceder a cámaras</option>';
+                selRef.innerHTML = '<option value="">Error al acceder a cámaras</option>';
+            }
+        }
+
+        function vincularEventosCamaras() {
+            // Cámara para Referencia de Catálogo
+            const btnInicCamRef = document.getElementById('btn-iniciar-cam-ref');
+            const btnFotoRef = document.getElementById('btn-foto-ref');
+            const videoRef = document.getElementById('video-ref');
+
+            btnInicCamRef.onclick = async () => {
+                const deviceId = document.getElementById('sel-camara-ref').value;
+                try {
+                    if (streamRefCam) streamRefCam.getTracks().forEach(t => t.stop());
+                    const constraints = deviceId ? { video: { deviceId: { exact: deviceId } } } : { video: true };
+                    streamRefCam = await navigator.mediaDevices.getUserMedia(constraints);
+                    videoRef.srcObject = streamRefCam;
+                    videoRef.style.display = 'block';
+                    btnFotoRef.style.display = 'block';
+                } catch (e) {
+                    alert('No se pudo activar la cámara de referencia: ' + e.message);
+                }
+            };
+
+            btnFotoRef.onclick = () => {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = videoRef.videoWidth || 600;
+                tempCanvas.height = videoRef.videoHeight || 600;
+                const tCtx = tempCanvas.getContext('2d');
+                tCtx.drawImage(videoRef, 0, 0, tempCanvas.width, tempCanvas.height);
+                
+                refExtraidaData = tempCanvas.toDataURL('image/jpeg', 0.85);
+                document.getElementById('preview-ref').innerText = 'Foto Ref Capturada ✓';
+                document.getElementById('preview-ref').style.background = 'var(--success)';
+
+                if (streamRefCam) {
+                    streamRefCam.getTracks().forEach(t => t.stop());
+                    videoRef.style.display = 'none';
+                    btnFotoRef.style.display = 'none';
+                }
+            };
+
+            // Archivo de Referencia manual
+            document.getElementById('file-ref').onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (evt) => {
+                        refExtraidaData = evt.target.result;
+                        document.getElementById('preview-ref').innerText = 'Imagen Ref Cargada ✓';
+                        document.getElementById('preview-ref').style.background = 'var(--success)';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            // Cámara para Cliente
+            const btnCamCliente = document.getElementById('btn-cam-cliente');
+            const btnCaptCliente = document.getElementById('btn-capturar-cliente');
+            const videoCliente = document.getElementById('video-cliente');
+            const wrapCamCliente = document.getElementById('wrap-cam-cliente');
+
+            btnCamCliente.onclick = async () => {
+                const deviceId = document.getElementById('sel-camara-cliente').value;
+                try {
+                    if (streamClienteCam) streamClienteCam.getTracks().forEach(t => t.stop());
+                    const constraints = deviceId ? { video: { deviceId: { exact: deviceId } } } : { video: true };
+                    streamClienteCam = await navigator.mediaDevices.getUserMedia(constraints);
+                    videoCliente.srcObject = streamClienteCam;
+                    wrapCamCliente.style.display = 'block';
+                } catch (e) {
+                    alert('Error activando la cámara del cliente: ' + e.message);
+                }
+            };
+
+            btnCaptCliente.onclick = () => {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = videoCliente.videoWidth || 600;
+                tempCanvas.height = videoCliente.videoHeight || 600;
+                const tCtx = tempCanvas.getContext('2d');
+                tCtx.drawImage(videoCliente, 0, 0, tempCanvas.width, tempCanvas.height);
+
+                const img = new Image();
+                img.onload = () => {
+                    imgCliente = img;
+                    posX = 0; posY = 0;
+                    redibujarCanvas();
+                };
+                img.src = tempCanvas.toDataURL('image/jpeg', 0.9);
+
+                if (streamClienteCam) {
+                    streamClienteCam.getTracks().forEach(t => t.stop());
+                    wrapCamCliente.style.display = 'none';
+                }
+            };
+
+            // Archivo Foto Cliente
+            document.getElementById('foto-cliente').onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (evt) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            imgCliente = img;
+                            posX = 0; posY = 0;
+                            redibujarCanvas();
+                        };
+                        img.src = evt.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+        }
+
+        // 5. CONTROLES DESLIZANTES Y VINCULACIÓN AL CANVAS
+        function vincularControlesDeslizantes() {
+            const ids = ['escala', 'opacidad', 'suavizado', 'brillo', 'contraste', 'r', 'b', 'zoom', 'rotar'];
+            ids.forEach(id => {
+                const ctrl = document.getElementById('ctrl-' + id);
+                const lb = document.getElementById('lb-' + id);
+                if (ctrl && lb) {
+                    ctrl.addEventListener('input', () => {
+                        lb.innerText = ctrl.value;
+                        requestAnimationFrame(redibujarCanvas);
+                    });
+                }
+            });
+        }
+
+        // 6. EVENTOS CANVAS (DOBLE TOQUE Y ARRASTRE DE OVERLAY)
+        function vincularEventosCanvas() {
+            canvas.addEventListener('pointerdown', (e) => {
+                if (!imgCliente) return;
+
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+
+                const mx = (e.clientX - rect.left) * scaleX;
+                const my = (e.clientY - rect.top) * scaleY;
+
+                const ahora = Date.now();
+                const diff = ahora - ultimoToque;
+                ultimoToque = ahora;
+
+                // Doble toque detectado
+                if (diff < 300 && diff > 0) {
+                    e.preventDefault();
+                    targetCoords.x = Math.round((mx / canvas.width) * imgCliente.naturalWidth);
+                    targetCoords.y = Math.round((my / canvas.height) * imgCliente.naturalHeight);
+                    mostrarMenuFlotanteZonas(e.pageX, e.pageY);
+                    return;
+                }
+
+                // Si hay un estilo overlay cargado, activar arrastre
+                if (estiloAplicado) {
+                    isDragging = true;
+                    startX = e.clientX - posX;
+                    startY = e.clientY - posY;
+                }
+            });
+
+            window.addEventListener('pointermove', (e) => {
+                if (!isDragging) return;
+                posX = e.clientX - startX;
+                posY = e.clientY - startY;
+                requestAnimationFrame(redibujarCanvas);
+            });
+
+            window.addEventListener('pointerup', () => { isDragging = false; });
+            window.addEventListener('pointercancel', () => { isDragging = false; });
+        }
+
+        // 7. MENÚ FLOTANTE DE ZONAS Y PANEL ARRASTRABLE
+        function mostrarMenuFlotanteZonas(px, py) {
+            const menu = document.getElementById('menu-flotante-zona');
+            menu.style.left = Math.min(px, window.innerWidth - 220) + 'px';
+            menu.style.top = py + 'px';
+            menu.style.display = 'block';
+        }
+
+        function cerrarMenuFlotante() {
+            document.getElementById('menu-flotante-zona').style.display = 'none';
+        }
+
+        function activarEdicionZona(zona) {
+            zonaActivaParaEditar = zona;
+            cerrarMenuFlotante();
+
+            const panel = document.getElementById('panel-edicion-zona');
+            document.getElementById('titulo-zona').innerText = `✨ Editando: ${zona.toUpperCase()}`;
+            document.getElementById('log-zona').innerText = `Coords: (${targetCoords.x}, ${targetCoords.y})`;
+            panel.style.display = 'block';
+        }
+
+        function cerrarPanelZona() {
+            document.getElementById('panel-edicion-zona').style.display = 'none';
+        }
+
+        function vincularPanelArrastrable() {
+            const panel = document.getElementById('panel-edicion-zona');
+            const handle = document.getElementById('panel-zona-drag-handle');
+            let pDrag = false, sx = 0, sy = 0, il = 0, it = 0;
+
+            handle.addEventListener('pointerdown', (e) => {
+                pDrag = true;
+                const rect = panel.getBoundingClientRect();
+                sx = e.clientX;
+                sy = e.clientY;
+                il = rect.left;
+                it = rect.top;
+
+                panel.style.transform = 'none';
+                panel.style.left = il + 'px';
+                panel.style.top = it + 'px';
+                panel.style.bottom = 'auto';
+            });
+
+            window.addEventListener('pointermove', (e) => {
+                if (!pDrag) return;
+                const dx = e.clientX - sx;
+                const dy = e.clientY - sy;
+                panel.style.left = (il + dx) + 'px';
+                panel.style.top = (it + dy) + 'px';
+            });
+
+            window.addEventListener('pointerup', () => { pDrag = false; });
+        }
+
+        // 8. COMUNICACIÓN CON BACKEND API (INCLUYE INTEGRIDUD DE LICENCIA)
+        function obtenerLicenciaConfigurada() {
+            return document.getElementById('cfg-licencia').value.trim() || 'GENESIS-2026-12-31-TEST';
+        }
+
+        document.getElementById('btn-aplicar-zona').onclick = async () => {
+            if (!imgCliente) {
+                alert('Cargue una foto del cliente primero.');
                 return;
             }
 
-            const tonoR = rgbDeHex(document.getElementById('tonoR').value, 0);
-            const tonoG = rgbDeHex(document.getElementById('tonoG').value, 1);
-            const tonoB = rgbDeHex(document.getElementById('tonoB').value, 2);
-            const brillo = parseFloat(document.getElementById('brillo').value);
-            const contraste = parseFloat(document.getElementById('contraste').value);
-            const suavizado = parseFloat(document.getElementById('suavizado').value);
-
-            const datos = {
-                imagen: fotoCapturada,
-                tono_r: tonoR,
-                tono_g: tonoG,
-                tono_b: tonoB,
-                brillo: brillo,
-                contraste: contraste,
-                suavizado: suavizado
-            };
-
-            document.getElementById('loading').classList.add('active');
-            document.getElementById('btnProcesar').disabled = true;
+            const btn = document.getElementById('btn-aplicar-zona');
+            const log = document.getElementById('log-zona');
+            btn.disabled = true;
+            btn.textContent = '🎨 Procesando IA...';
+            log.innerText = 'Enviando petición a la API...';
 
             try {
-                const respuesta = await fetch('http://localhost:8080/api/procesar_rostro', {
+                // Guardar en historial para función Deshacer
+                if (historialImg.length >= 10) historialImg.shift();
+                historialImg.push(canvas.toDataURL('image/jpeg', 0.85));
+
+                const colorVal = document.getElementById('val-color-zona').value;
+                const intensidadVal = document.getElementById('val-intensidad-zona').value;
+                const sizeVal = document.getElementById('val-size-zona').value;
+                const licenciaKey = obtenerLicenciaConfigurada();
+
+                const payload = {
+                    imagen_base64: canvas.toDataURL('image/jpeg', 0.85),
+                    imagen: canvas.toDataURL('image/jpeg', 0.85),
+                    zona: zonaActivaParaEditar,
+                    coord_x: targetCoords.x,
+                    coord_y: targetCoords.y,
+                    color: colorVal,
+                    intensidad: parseInt(intensidadVal),
+                    size: parseInt(sizeVal),
+                    brillo: parseInt(document.getElementById('ctrl-brillo').value),
+                    licencia: licenciaKey
+                };
+
+                const res = await fetch(`${API_BASE_URL}/api/editar_rasgos`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datos)
+                    body: JSON.stringify(payload)
                 });
 
-                const resultado = await respuesta.json();
-                if (resultado.estatus === 'ok') {
-                    document.getElementById('imagePreview').src = resultado.imagen_procesada;
-                    mostrarExito('¡Imagen procesada correctamente!');
-                } else {
-                    mostrarError('Error en la API: ' + resultado.error);
+                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+                const data = await res.json();
+                
+                const resImg = data.imagen_resultante || data.imagen_procesada || data.result;
+                if (!resImg) throw new Error("No se recibió imagen del servidor");
+
+                const newImg = new Image();
+                newImg.onload = () => {
+                    imgCliente = newImg;
+                    log.innerText = '¡Cambio de IA aplicado!';
+                    btn.disabled = false;
+                    btn.textContent = '🎨 Aplicar Cambio IA';
+                    redibujarCanvas();
+                };
+                newImg.src = resImg.startsWith('data:') ? resImg : 'data:image/jpeg;base64,' + resImg;
+
+            } catch (err) {
+                console.error("Error en API:", err);
+                alert("Error al procesar zona con IA: " + err.message);
+                log.innerText = "Error de procesamiento";
+                btn.disabled = false;
+                btn.textContent = '🎨 Aplicar Cambio IA';
+            }
+        };
+
+        document.getElementById('btn-procesar-motor').onclick = async () => {
+            if (!imgCliente) {
+                alert('Cargue una foto del cliente primero.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-procesar-motor');
+            btn.disabled = true;
+            btn.textContent = '⚡ Procesando Rostro Completo...';
+
+            try {
+                if (historialImg.length >= 10) historialImg.shift();
+                historialImg.push(canvas.toDataURL('image/jpeg', 0.85));
+
+                const licenciaKey = obtenerLicenciaConfigurada();
+                const payload = {
+                    imagen: canvas.toDataURL('image/jpeg', 0.85),
+                    imagen_base64: canvas.toDataURL('image/jpeg', 0.85),
+                    brillo: parseInt(document.getElementById('ctrl-brillo').value),
+                    contraste: parseInt(document.getElementById('ctrl-contraste').value),
+                    licencia: licenciaKey
+                };
+
+           // BUSCA EN TU CÓDIGO DONDE HACES EL fetch() Y REEMPLÁZALO POR ESTO:
+
+function enviarAProcesarRostro() {
+    // 1. Obtienes el canvas cliente
+    const canvasCliente = document.getElementById('canvas-cliente');
+    
+    // 2. Lees los valores de los sliders / controles de tu interfaz
+    const tonoR = parseFloat(document.getElementById('slider-r')?.value || 100);
+    const tonoG = parseFloat(document.getElementById('slider-g')?.value || 100);
+    const tonoB = parseFloat(document.getElementById('slider-b')?.value || 100);
+    const brillo = parseFloat(document.getElementById('slider-brillo')?.value || 50);
+    const contraste = parseFloat(document.getElementById('slider-contraste')?.value || 50);
+
+    // 3. Ejecutas el Perceptrón 211 DIRECTO en la memoria del teléfono
+    procesarMatrizRostroLocal(canvasCliente, tonoR, tonoG, tonoB, brillo, contraste);
+
+    console.log("Procesamiento local NBO-a / Perceptrón 211 completado.");
+}
+
+                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+                const data = await res.json();
+
+                const resImg = data.imagen_resultante || data.imagen_procesada || data.result;
+                if (!resImg) throw new Error("No se recibió respuesta válida.");
+
+                const newImg = new Image();
+                newImg.onload = () => {
+                    imgCliente = newImg;
+                    btn.disabled = false;
+                    btn.textContent = '⚡ Procesar Motor IA Global';
+                    redibujarCanvas();
+                };
+                newImg.src = resImg.startsWith('data:') ? resImg : 'data:image/jpeg;base64,' + resImg;
+
+            } catch (err) {
+                alert("Error en el motor general: " + err.message);
+                btn.disabled = false;
+                btn.textContent = '⚡ Procesar Motor IA Global';
+            }
+        };
+
+        // 9. MOTOR DE DIBUJO Y RENDERIZADO DEL CANVAS
+        function redibujarCanvas() {
+            if (!imgCliente) {
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '16px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('Sin imagen de cliente', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+
+            const zoom = parseFloat(document.getElementById('ctrl-zoom').value) / 100;
+            const rot = (parseFloat(document.getElementById('ctrl-rotar').value) * Math.PI) / 180;
+
+            const w = imgCliente.naturalWidth * zoom;
+            const h = imgCliente.naturalHeight * zoom;
+
+            canvas.width = w;
+            canvas.height = h;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate(rot);
+            ctx.translate(-canvas.width / 2, -canvas.height / 2);
+
+            // Ajuste de tonos R y B
+            const toneR = parseFloat(document.getElementById('ctrl-r').value) / 100;
+            const toneB = parseFloat(document.getElementById('ctrl-b').value) / 100;
+
+            ctx.drawImage(imgCliente, 0, 0, canvas.width, canvas.height);
+
+            // Aplicar Estilo de superposición si existe
+            if (estiloAplicado) {
+                const escala = parseFloat(document.getElementById('ctrl-escala').value) / 100;
+                const opacidad = parseFloat(document.getElementById('ctrl-opacidad').value) / 100;
+                const brillo = document.getElementById('ctrl-brillo').value;
+                const contraste = document.getElementById('ctrl-contraste').value;
+
+                ctx.globalAlpha = opacidad;
+                ctx.filter = `brightness(${brillo}%) contrast(${contraste}%)`;
+
+                if (imgOverlayObj) {
+                    const ab = canvas.width * escala;
+                    const al = canvas.height * escala;
+                    const ox = (canvas.width - ab) / 2 + posX;
+                    const oy = (canvas.height - al) / 2 + posY;
+                    ctx.drawImage(imgOverlayObj, ox, oy, ab, al);
+                } else if (estiloAplicado.color) {
+                    ctx.fillStyle = estiloAplicado.color;
+                    ctx.globalCompositeOperation = 'color';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
                 }
-            } catch (error) {
-                mostrarError('Error al procesar: ' + error.message);
-            } finally {
-                document.getElementById('loading').classList.remove('active');
-                document.getElementById('btnProcesar').disabled = false;
+            }
+
+            ctx.restore();
+        }
+
+        // 10. GESTIÓN DE CATÁLOGOS Y PRESUPUESTOS
+        document.getElementById('btn-guardar-cat').onclick = () => {
+            const nombre = document.getElementById('cat-nombre').value.trim();
+            const tipo = document.getElementById('cat-tipo').value;
+            const precio = parseFloat(document.getElementById('cat-precio').value) || 0;
+            const color = document.getElementById('cat-color').value;
+
+            if (!nombre) {
+                alert('Ingrese el nombre del estilo.');
+                return;
+            }
+
+            const nuevoItem = {
+                id: 'cat_' + Date.now(),
+                nombre,
+                tipo,
+                precio,
+                color,
+                imagen: refExtraidaData || null
+            };
+
+            catalogo.push(nuevoItem);
+            localStorage.setItem('salon_cat', JSON.stringify(catalogo));
+
+            document.getElementById('cat-nombre').value = '';
+            document.getElementById('cat-precio').value = '';
+            refExtraidaData = null;
+            document.getElementById('preview-ref').innerText = 'Sin foto ref';
+            document.getElementById('preview-ref').style.background = 'var(--border)';
+
+            renderCatConfig();
+            renderCatTrabajo();
+            alert('¡Estilo guardado con éxito!');
+        };
+
+        function renderCatConfig() {
+            const cont = document.getElementById('lista-cat-config');
+            if (catalogo.length === 0) {
+                cont.innerHTML = '<div style="font-size:12px; opacity:0.6;">Sin estilos guardados</div>';
+                return;
+            }
+
+            cont.innerHTML = catalogo.map(item => `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg); padding:8px; border-radius:8px; margin-top:6px; font-size:12px; border:1px solid var(--border);">
+                    <div>
+                        <strong>${item.nombre}</strong> (${item.tipo}) - $${item.precio.toFixed(2)}
+                    </div>
+                    <button onclick="eliminarCat('${item.id}')" style="width:auto; padding:4px 8px; margin:0; background:var(--danger); font-size:10px;">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function eliminarCat(id) {
+            catalogo = catalogo.filter(c => c.id !== id);
+            localStorage.setItem('salon_cat', JSON.stringify(catalogo));
+            renderCatConfig();
+            renderCatTrabajo();
+        }
+
+        function renderCatTrabajo(filtro = 'todos') {
+            const carrusel = document.getElementById('carrusel-trabajo');
+            const combo = document.getElementById('combo-catalogo');
+
+            const filtrados = filtro === 'todos' ? catalogo : catalogo.filter(c => c.tipo === filtro);
+
+            carrusel.innerHTML = filtrados.map(item => `
+                <div class="item-cat" onclick="aplicarEstilo('${item.id}')">
+                    <img src="${item.imagen || 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'65\'><rect width=\'100%\' height=\'100%\' fill=\'%23334155\'/></svg>'}" alt="${item.nombre}">
+                    <div><strong>${item.nombre}</strong></div>
+                    <div style="color:var(--success); font-weight:700;">$${item.precio.toFixed(2)}</div>
+                </div>
+            `).join('');
+
+            combo.innerHTML = catalogo.map(item => `<option value="${item.id}">${item.nombre} ($${item.precio.toFixed(2)})</option>`).join('');
+        }
+
+        function filtrarCat(tipo, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activo'));
+            btn.classList.add('activo');
+            renderCatTrabajo(tipo);
+        }
+
+        function aplicarEstilo(idItem) {
+            const item = catalogo.find(c => c.id === idItem);
+            if (!item) return;
+
+            estiloAplicado = item;
+            posX = 0; posY = 0;
+
+            if (item.imagen) {
+                const img = new Image();
+                img.onload = () => {
+                    imgOverlayObj = img;
+                    redibujarCanvas();
+                };
+                img.src = item.imagen;
+            } else {
+                imgOverlayObj = null;
+                redibujarCanvas();
             }
         }
 
-        // Convertir hex a RGB
-        function rgbDeHex(hex, canal) {
-            const rgb = parseInt(hex.substring(1), 16);
-            const r = (rgb >> 16) & 255;
-            const g = (rgb >> 8) & 255;
-            const b = rgb & 255;
-            const valores = [r, g, b];
-            return (valores[canal] / 255) * 100;
+        // 11. MANEJO DE PRESUPUESTOS Y TICKET
+        document.getElementById('btn-sumar').onclick = () => {
+            const combo = document.getElementById('combo-catalogo');
+            const item = catalogo.find(c => c.id === combo.value);
+            if (item) agregarAlPresupuesto(item.nombre, item.precio);
+        };
+
+        document.getElementById('btn-add-custom').onclick = () => {
+            const nom = document.getElementById('custom-nombre').value.trim();
+            const precio = parseFloat(document.getElementById('custom-precio').value) || 0;
+            if (nom) {
+                agregarAlPresupuesto(nom, precio);
+                document.getElementById('custom-nombre').value = '';
+                document.getElementById('custom-precio').value = '';
+            }
+        };
+
+        function agregarAlPresupuesto(nombre, precio) {
+            serviciosSeleccionados.push({ id: Date.now(), nombre, precio });
+            actualizarPresupuesto();
         }
 
-        // Resetear controles
-        function resetearControles() {
-            document.getElementById('tonoR').value = '#ff0000';
-            document.getElementById('tonoG').value = '#00ff00';
-            document.getElementById('tonoB').value = '#0000ff';
-            document.getElementById('brillo').value = 50;
-            document.getElementById('contraste').value = 50;
-            document.getElementById('suavizado').value = 0;
-            document.getElementById('brilloValue').textContent = '50';
-            document.getElementById('contrasteValue').textContent = '50';
-            document.getElementById('suavizadoValue').textContent = '0';
-            limpiarMensajes();
+        function quitarDelPresupuesto(id) {
+            serviciosSeleccionados = serviciosSeleccionados.filter(s => s.id !== id);
+            actualizarPresupuesto();
         }
 
-        // Actualizar valores
-        document.getElementById('brillo').addEventListener('input', (e) => {
-            document.getElementById('brilloValue').textContent = e.target.value;
-        });
-        document.getElementById('contraste').addEventListener('input', (e) => {
-            document.getElementById('contrasteValue').textContent = e.target.value;
-        });
-        document.getElementById('suavizado').addEventListener('input', (e) => {
-            document.getElementById('suavizadoValue').textContent = e.target.value;
-        });
+        function actualizarPresupuesto() {
+            const cont = document.getElementById('lista-presupuesto');
+            totalGeneral = serviciosSeleccionados.reduce((acc, s) => acc + s.precio, 0);
 
-        // Funciones de mensajes
-        function mostrarError(msg) {
-            document.getElementById('error').textContent = msg;
-            document.getElementById('error').style.display = 'block';
-            setTimeout(() => limpiarMensajes(), 5000);
+            if (serviciosSeleccionados.length === 0) {
+                cont.innerHTML = 'Sin servicios';
+            } else {
+                cont.innerHTML = serviciosSeleccionados.map(s => `
+                    <div>
+                        <span>${s.nombre} - <strong>$${s.precio.toFixed(2)}</strong></span>
+                        <button onclick="quitarDelPresupuesto(${s.id})" style="width:auto; padding:2px 6px; margin:0; background:var(--danger); font-size:10px;">✕</button>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('total-suma').innerText = '$' + totalGeneral.toFixed(2);
         }
 
-        function mostrarExito(msg) {
-            document.getElementById('success').textContent = msg;
-            document.getElementById('success').style.display = 'block';
-            setTimeout(() => limpiarMensajes(), 5000);
-        }
+        document.getElementById('btn-ticket').onclick = () => {
+            if (serviciosSeleccionados.length === 0) {
+                alert('No hay servicios seleccionados para el ticket.');
+                return;
+            }
 
-        function limpiarMensajes() {
-            document.getElementById('error').style.display = 'none';
-            document.getElementById('success').style.display = 'none';
-        }
+            const negocio = document.getElementById('cfg-negocio').value || 'Salon Studio Pro';
+            document.getElementById('ticket-negocio').innerText = negocio;
 
-        // Iniciar cuando carga
-        window.addEventListener('load', iniciarCamara);
+            const desglose = document.getElementById('nota-desglose');
+            desglose.innerHTML = serviciosSeleccionados.map(s => `
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:13px;">
+                    <span>${s.nombre}</span>
+                    <span>$${s.precio.toFixed(2)}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('nota-total').innerText = 'TOTAL: $' + totalGeneral.toFixed(2);
+            document.getElementById('fina-nota').style.display = 'block';
+        };
+
+        // 12. ACCIONES LIMPIAR, DESHACER Y EXPORTAR
+        document.getElementById('btn-limpiar-capas').onclick = () => {
+            estiloAplicado = null;
+            imgOverlayObj = null;
+            posX = 0; posY = 0;
+            redibujarCanvas();
+        };
+
+        document.getElementById('btn-deshacer').onclick = () => {
+            if (historialImg.length === 0) {
+                alert('No hay cambios guardados para deshacer.');
+                return;
+            }
+            const prevSrc = historialImg.pop();
+            const img = new Image();
+            img.onload = () => {
+                imgCliente = img;
+                redibujarCanvas();
+            };
+            img.src = prevSrc;
+        };
+
+        document.getElementById('btn-exportar-foto').onclick = () => {
+            if (!imgCliente) {
+                alert('No hay imagen para exportar.');
+                return;
+            }
+            const link = document.createElement('a');
+            link.download = 'salon_studio_pro_' + Date.now() + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        };
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+<style>
+  #licencia-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: #0f172a; color: #f8fafc;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 9999999; font-family: system-ui, -apple-system, sans-serif;
+    padding: 20px; box-sizing: border-box; text-align: center;
+  }
+  .licencia-card {
+    background: #1e293b; padding: 25px; border-radius: 12px;
+    border: 1px solid #334155; width: 100%; max-width: 360px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  }
+  .licencia-input {
+    width: 100%; padding: 12px; margin: 15px 0;
+    background: #0f172a; border: 1px solid #334155;
+    color: #fff; border-radius: 8px; font-size: 13px;
+    box-sizing: border-box; text-align: center; font-family: monospace;
+  }
+  .licencia-btn {
+    width: 100%; padding: 12px; background: #2563eb; color: #fff;
+    border: none; border-radius: 8px; font-weight: bold;
+    cursor: pointer; margin-bottom: 10px; font-size: 14px;
+  }
+  .licencia-btn-mp {
+    background: #009ee3;
+  }
+  .licencia-msg { color: #ef4444; font-size: 13px; margin-top: 10px; }
+</style>
+
+<div id="licencia-overlay">
+  <div class="licencia-card">
+    <h2 style="margin-top:0;">💈 Salón Studio Pro</h2>
+    <p style="color: #94a3b8; font-size: 14px;">Ingresa tu clave de activación para comenzar a utilizar la aplicación.</p>
+    
+    <input type="text" id="licencia-key-input" class="licencia-input" placeholder="GEN--XXXXXXXXXXXX">
+    <button onclick="validarYGuardarLicencia()" class="licencia-btn">Activar Licencia</button>
+    <button onclick="abrirPagoMercadoPago()" class="licencia-btn licencia-btn-mp">Comprar Licencia (Mercado Pago)</button>
+    
+    <div id="licencia-mensaje" class="licencia-msg"></div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // Semilla secreta (Coincide con tu script de Python)
+    const SECRET_SEED = "GENESIS_B_SECRET_2026";
+
+    // Revisa la clave con la lógica matemática exacta de tu Python
+    function verificarLicenciaJS(clave) {
+      if (!clave || !clave.startsWith("GEN-")) return { valida: false, motivo: "Formato de clave incorrecto." };
+
+      const partes = clave.split("-");
+      if (partes.length !== 5) return { valida: false, motivo: "Estructura de clave no válida." };
+
+      const fechaStr = `${partes[1]}-${partes[2]}-${partes[3]}`; // Formato AAAA-MM-DD
+      const tokenCliente = partes[4];
+
+      // 1. Validar expiración contra la fecha actual
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+
+      const [year, month, day] = partes.slice(1, 4).map(Number);
+      const fechaExp = new Date(year, month - 1, day);
+
+      if (fechaExp < hoy) {
+        return { valida: false, motivo: "La licencia expiró el " + fechaStr };
+      }
+
+      // 2. Comprobar Hash SHA-256
+      if (typeof CryptoJS === "undefined") {
+        return { valida: false, motivo: "Error al cargar librerías de seguridad. Revisa tu conexión." };
+      }
+
+      const rawData = `${fechaStr}-${SECRET_SEED}`;
+      const tokenCalculado = CryptoJS.SHA256(rawData).toString(CryptoJS.enc.Hex).substring(0, 12).toUpperCase();
+
+      if (tokenCliente === tokenCalculado) {
+        return { valida: true, expira: fechaStr };
+      } else {
+        return { valida: false, motivo: "Clave de licencia inválida." };
+      }
+    }
+
+    // Comprobar estado al abrir la App
+    window.comprobarAcceso = function() {
+      const claveGuardada = localStorage.getItem("app_licencia_key");
+      const overlay = document.getElementById("licencia-overlay");
+
+      if (claveGuardada) {
+        const res = verificarLicenciaJS(claveGuardada);
+        if (res.valida) {
+          overlay.style.display = "none";
+          return;
+        }
+      }
+      overlay.style.display = "flex";
+    };
+
+    // Validar cuando el usuario presiona "Activar Licencia"
+    window.validarYGuardarLicencia = function() {
+      const inputKey = document.getElementById("licencia-key-input").value.trim().toUpperCase();
+      const msgDiv = document.getElementById("licencia-mensaje");
+
+      const res = verificarLicenciaJS(inputKey);
+
+      if (res.valida) {
+        localStorage.setItem("app_licencia_key", inputKey);
+        msgDiv.style.color = "#22c55e";
+        msgDiv.innerText = "¡Licencia válida hasta " + res.expira + "! Cargando...";
+        setTimeout(() => {
+          document.getElementById("licencia-overlay").style.display = "none";
+        }, 1200);
+      } else {
+        msgDiv.style.color = "#ef4444";
+        msgDiv.innerText = res.motivo;
+      }
+    };
+
+    // Link para compras con Mercado Pago
+    window.abrirPagoMercadoPago = function() {
+      const linkPagoMP = "https://mpago.la/tu-link-de-pago"; 
+      window.open(linkPagoMP, '_blank');
+    };
+
+    // Ejecutar verificación de inmediato al cargar el DOM
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", window.comprobarAcceso);
+    } else {
+      window.comprobarAcceso();
+    }
+  })();
+</script>
 </body>
 </html>
