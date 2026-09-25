@@ -9,39 +9,55 @@ package.name = salonstudio
 # (str) Package domain (needed for android packaging)
 package.domain = com.salon.studio
 
-# (str) Source code where the main.py lives (Corregido con espacio obligatorio)
+# (str) Source code where the main.py lives
 source.dir = .
 
-# (list) Source files to include (Asegura que tu HTML se guarde dentro del APK)
-source.include_exts = py,png,jpg,kv,atlas,html,css
+# (list) Source files to include
+source.include_exts = py,png,jpg,jpeg,kv,atlas,html,css,json
 
 # (str) Application version
 version = 1.0
 
 # (list) Application requirements
-# 🚀 CRÍTICO: Agregados numpy y pillow para tu procesador de imágenes por matrices
-requirements = python3, kivy, numpy, pillow, android
+# pyjnius para acceso nativo a Android WebView
+# numpy y pillow para procesamiento de imágenes
+requirements = python3, kivy, pyjnius, numpy, pillow, android
 
-# (str) Supported orientations (landscape, portrait or all)
+# (str) Supported orientations
 orientation = portrait
 
 # (list) Permissions
-# 📸 CRÍTICO: Permisos necesarios para usar la cámara y simular el rostro en el celular
-android.permissions = CAMERA, INTERNET, RECORD_AUDIO
+# Permisos para cámara, internet y audio
+android.permissions = CAMERA, INTERNET, RECORD_AUDIO, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
 
-# (int) Target Android API, should be as high as possible.
+# (int) Target Android API
 android.api = 33
 
-# (int) Minimum API your APK will support.
+# (int) Minimum API your APK will support
 android.minapi = 21
 
-# (bool) Accept SDK license agreement if needed
+# (bool) Accept SDK license agreement
 android.accept_sdk_license_agreement = True
+
+# (str) Android logcat filters
+android.logcat_filters = *:S python:D
+
+# (bool) Copy library instead of making a libpymodules.so
+android.copy_libs = 1
+
+# (list) The Android archs to build for
+android.archs = arm64-v8a
+
+# (bool) Enable AndroidX support
+android.enable_androidx = True
+
+# (bool) Indicate if the application uses cleartext traffic
+android.uses_cleartext_traffic = True
 
 [buildozer]
 
-# (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
+# (int) Log level (0 = error only, 1 = info, 2 = debug)
 log_level = 2
 
-# (int) Display warning if buildozer is run as root (0 = false, 1 = true)
+# (int) Display warning if buildozer is run as root
 warn_on_root = 1
